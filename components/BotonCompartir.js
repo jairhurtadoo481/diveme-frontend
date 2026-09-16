@@ -12,7 +12,7 @@ export default function BotonCompartir({ producto }) {
       try {
         await navigator.share({
           title: producto.nombre,
-          text: `Mira esta zapatilla: ${producto.nombre} - ${producto.marca}`,
+          text: `Mira esto en Diveme: ${producto.nombre}`,
           url,
         });
       } catch (e) {

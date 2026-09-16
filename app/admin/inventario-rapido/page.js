@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
-import Tesseract from "tesseract.js";
+import { useState } from "react";
 import ProtegerAdmin from "../../../components/ProtegerAdmin";
 import {
   buscarPorCodigoModelo,
@@ -11,8 +10,6 @@ import {
 } from "../../../lib/api";
 import { obtenerToken } from "../../../lib/auth";
 import { SECCIONES, TIPOS_POR_SECCION, TALLAS_SUGERIDAS } from "../../../lib/catalogoRopa";
-
-const TALLAS_DEFECTO = TALLAS_SUGERIDAS;
 
 export default function InventarioRapidoPage() {
   const [codigoModelo, setCodigoModelo] = useState("");
@@ -40,11 +37,6 @@ export default function InventarioRapidoPage() {
   const [imagenNueva, setImagenNueva] = useState(null);
   const [creando, setCreando] = useState(false);
 
-  const [escaneando, setEscaneando] = useState(false);
-  const [progresoOcr, setProgresoOcr] = useState(0);
-  const inputCamaraRef = useRef(null);
-  const inputFotoProductoRef = useRef(null);
-
   const actualizarNombreSugerido = (cambios) => {
     const nuevo = { ...formNuevo, ...cambios };
     const partes = [nuevo.modelo, nuevo.color].filter(Boolean);
@@ -55,55 +47,9 @@ export default function InventarioRapidoPage() {
     setFormNuevo((prev) => actualizarNombreSugerido({ ...prev, [campo]: valor }));
   };
 
-  const procesarImagenOcr = async (archivo) => {
-    setEscaneando(true);
-    setProgresoOcr(0);
-    setError("");
-    try {
-      const resultado = await Tesseract.recognize(archivo, "eng", {
-        logger: (info) => {
-          if (info.status === "recognizing text") {
-            setProgresoOcr(Math.round(info.progress * 100));
-          }
-        },
-      });
-      const texto = resultado.data.text;
-
-      const lineas = texto
-        .split("\n")
-        .map((l) => l.trim())
-        .filter(Boolean);
-
-      const posibleCodigo = lineas.find((l) => /^[A-Z0-9\-]{6,}$/i.test(l.replace(/\s/g, "")));
-      const posibleTalla = texto.match(/\b(XS|S|M|L|XL|XXL)\b/i);
-
-      if (posibleCodigo) {
-        setCodigoModelo(posibleCodigo.replace(/\s/g, ""));
-      }
-      if (posibleTalla) {
-        setTallaStock(posibleTalla[0].toUpperCase());
-        setTallaNueva(posibleTalla[0].toUpperCase());
-      }
-
-      const primeraLinea = lineas[0] || "";
-      setFormNuevo((prev) => actualizarNombreSugerido({ ...prev, modelo: primeraLinea }));
-
-      setMensaje("Texto leido. Revisa y corrige los campos si algo salio mal.");
-    } catch (err) {
-      setError("No se pudo leer la imagen: " + err.message);
-    } finally {
-      setEscaneando(false);
-    }
-  };
-
-  const manejarCapturaCamara = (e) => {
-    const archivo = e.target.files[0];
-    if (archivo) procesarImagenOcr(archivo);
-  };
-
   const buscarCodigo = async () => {
     if (!codigoModelo.trim()) {
-      setError("Escribe o escanea un codigo de modelo");
+      setError("Escribe un codigo de modelo");
       return;
     }
     setBuscando(true);
@@ -149,7 +95,7 @@ export default function InventarioRapidoPage() {
       return;
     }
     if (!tallaNueva || !cantidadNueva || Number(cantidadNueva) <= 0) {
-      setError("Indica la talla y cantidad de esta caja");
+      setError("Indica la talla y cantidad iniciales");
       return;
     }
 
@@ -157,7 +103,7 @@ export default function InventarioRapidoPage() {
     setError("");
     try {
       const token = obtenerToken();
-      const tallasIniciales = TALLAS_DEFECTO.map((t) => ({
+      const tallasIniciales = TALLAS_SUGERIDAS.map((t) => ({
         talla: t,
         stock: t === tallaNueva ? Number(cantidadNueva) : 0,
       }));
@@ -203,36 +149,20 @@ export default function InventarioRapidoPage() {
     <ProtegerAdmin>
       <div className="bg-white min-h-screen">
         <div className="max-w-lg mx-auto px-4 py-8">
-          <h1 className="text-2xl font-bold mb-6 text-gray-900">Inventario rapido</h1>
+          <h1 className="text-2xl font-bold mb-2 text-gray-900">Inventario rapido</h1>
+          <p className="text-sm text-gray-500 mb-6">
+            Busca un producto por su codigo de modelo para sumarle stock, o crea uno nuevo si no existe todavia.
+          </p>
 
           <div className="border border-gray-200 rounded-lg p-4 mb-6">
-            <label className="text-sm font-semibold text-gray-900 block mb-2">
-              Escanea la etiqueta de la caja
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              capture="environment"
-              ref={inputCamaraRef}
-              onChange={manejarCapturaCamara}
-              className="hidden"
-            />
-            <button
-              onClick={() => inputCamaraRef.current?.click()}
-              disabled={escaneando}
-              className="w-full bg-blue-600 text-white rounded py-3 font-semibold hover:bg-blue-700 transition disabled:opacity-50 mb-3"
-            >
-              {escaneando ? `Leyendo... ${progresoOcr}%` : "Abrir camara y escanear"}
-            </button>
-
             <label className="text-sm font-semibold text-gray-900 block mb-1">
-              Codigo de modelo (revisa/corrige lo leido)
+              Codigo de modelo
             </label>
             <div className="flex gap-2">
               <input
                 value={codigoModelo}
                 onChange={(e) => setCodigoModelo(e.target.value)}
-                placeholder="Ej: AW06-M-01-17"
+                placeholder="Ej: BLU-NEGRA-01"
                 className={claseInput}
               />
               <button
@@ -269,8 +199,8 @@ export default function InventarioRapidoPage() {
                   onChange={(e) => setTallaStock(e.target.value)}
                   className={claseInput}
                 >
-                  <option value="">Talla de esta caja</option>
-                  {TALLAS_DEFECTO.map((t) => (
+                  <option value="">Talla</option>
+                  {TALLAS_SUGERIDAS.map((t) => (
                     <option key={t} value={t}>{t}</option>
                   ))}
                 </select>
@@ -308,13 +238,13 @@ export default function InventarioRapidoPage() {
                   className={claseInput}
                 />
                 <input
-                  placeholder="Modelo (ej: Kiama)"
+                  placeholder="Modelo (ej: Blusa Floral)"
                   value={formNuevo.modelo}
                   onChange={(e) => manejarCambioFormNuevo("modelo", e.target.value)}
                   className={claseInput}
                 />
                 <input
-                  placeholder="Color (ej: Negro-Rojo)"
+                  placeholder="Color (ej: Negro)"
                   value={formNuevo.color}
                   onChange={(e) => manejarCambioFormNuevo("color", e.target.value)}
                   className={claseInput}
@@ -365,8 +295,8 @@ export default function InventarioRapidoPage() {
                     onChange={(e) => setTallaNueva(e.target.value)}
                     className={claseInput}
                   >
-                    <option value="">Talla de esta caja</option>
-                    {TALLAS_DEFECTO.map((t) => (
+                    <option value="">Talla inicial</option>
+                    {TALLAS_SUGERIDAS.map((t) => (
                       <option key={t} value={t}>{t}</option>
                     ))}
                   </select>
@@ -383,8 +313,6 @@ export default function InventarioRapidoPage() {
                 <input
                   type="file"
                   accept="image/*"
-                  capture="environment"
-                  ref={inputFotoProductoRef}
                   onChange={(e) => setImagenNueva(e.target.files[0])}
                   className={claseInput}
                 />

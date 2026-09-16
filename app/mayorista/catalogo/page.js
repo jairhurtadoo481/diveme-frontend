@@ -65,12 +65,12 @@ export default function CatalogoMayoristaPage() {
 
   const confirmarReserva = async () => {
     if (faltante > 0) {
-      setErrorReserva(`Te faltan ${faltante} pares para llegar al minimo de ${minimo}.`);
+      setErrorReserva(`Te faltan ${faltante} prendas para llegar al minimo de ${minimo}.`);
       return;
     }
 
     const confirmar = window.confirm(
-      `Estas por reservar ${cantidadTotal} pares por un total de S/ ${totalPrecio}. Esta accion notificara al vendedor y no debe hacerse "por gusto". Confirmas?`
+      `Estas por reservar ${cantidadTotal} prendas por un total de S/ ${totalPrecio}. Esta accion notificara al vendedor y no debe hacerse "por gusto". Confirmas?`
     );
     if (!confirmar) return;
 
@@ -135,7 +135,7 @@ export default function CatalogoMayoristaPage() {
 
           <p className="text-sm text-gray-500 mb-6">
             Selecciona la cantidad de cada talla que quieres reservar. Necesitas un minimo de{" "}
-            <span className="font-semibold text-gray-900">{minimo} pares en total</span> (mezclando modelos) para
+            <span className="font-semibold text-gray-900">{minimo} prendas en total</span> (mezclando modelos) para
             poder reservar.
           </p>
 
@@ -202,7 +202,7 @@ export default function CatalogoMayoristaPage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
                 <div>
                   <p className="text-sm text-gray-700">
-                    <span className="font-bold text-gray-900">{cantidadTotal}</span> pares seleccionados
+                    <span className="font-bold text-gray-900">{cantidadTotal}</span> prendas seleccionadas
                     {faltante > 0 && (
                       <span className="text-red-600"> - faltan {faltante} para el minimo</span>
                     )}

@@ -6,6 +6,7 @@ import ProtegerAdmin from "../../../../components/ProtegerAdmin";
 import { crearProducto, subirImagenesProducto, subirVideoProducto } from "../../../../lib/api";
 import { obtenerToken } from "../../../../lib/auth";
 import { SECCIONES, TIPOS_POR_SECCION } from "../../../../lib/catalogoRopa";
+import SelectorColores from "../../../../components/SelectorColores";
 
 const claseInput = "border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 placeholder-gray-400";
 
@@ -160,13 +161,13 @@ export default function NuevoProductoPage() {
               <div className="flex-1">
                 <input
                   name="codigo"
-                  placeholder="Codigo / numero del par (ej: 1, 2, 3...)"
+                  placeholder="Codigo de la prenda (ej: 1, 2, 3...)"
                   value={form.codigo}
                   onChange={manejarCambio}
                   className={`${claseInput} w-full`}
                 />
                 <p className="text-xs text-gray-400 mt-1">
-                  El mismo numero que pegaste en la nota fisica del par.
+                  El mismo numero que pegaste en la etiqueta fisica de la prenda.
                 </p>
               </div>
               <select
@@ -192,7 +193,7 @@ export default function NuevoProductoPage() {
             <div>
               <input
                 name="modeloBase"
-                placeholder="Modelo base (ej: Air Max 90) - opcional, para agrupar variantes"
+                placeholder="Modelo base (ej: Blusa Floral) - opcional, para agrupar variantes"
                 value={form.modeloBase}
                 onChange={manejarCambio}
                 className={`${claseInput} w-full`}
@@ -255,13 +256,13 @@ export default function NuevoProductoPage() {
               </select>
             </div>
 
-            <input
-              name="colores"
-              placeholder="Colores (separados por coma)"
-              value={form.colores}
-              onChange={manejarCambio}
-              className={claseInput}
-            />
+            <div>
+              <p className="font-semibold mb-2 text-gray-900">Colores</p>
+              <SelectorColores
+                value={form.colores}
+                onChange={(colores) => setForm((prev) => ({ ...prev, colores }))}
+              />
+            </div>
 
             <div>
               <p className="font-semibold mb-2 text-gray-900">Tallas y stock</p>

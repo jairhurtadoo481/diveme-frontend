@@ -1,7 +1,7 @@
 import { obtenerProductos } from "../lib/api";
 
-// TODO: reemplazar por el dominio real de Diveme cuando lo tengan
-const SITE_URL = "https://diveme.pe";
+// TODO: reemplazar por el dominio propio cuando lo tengan (ej: diveme.pe)
+const SITE_URL = "https://diveme-frontend.vercel.app";
 
 export default async function sitemap() {
   const paginasPrincipales = [

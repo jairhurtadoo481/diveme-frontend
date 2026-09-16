@@ -452,7 +452,7 @@ export default function VentasPage() {
               {rankingVendedores.map((v, i) => (
                 <div key={v.vendedor} className="flex items-center justify-between text-sm">
                   <span>{i === 0 ? "1st" : i === 1 ? "2nd" : `${i + 1}.`} {v.vendedor}</span>
-                  <span className="font-semibold">S/ {v.total} ({v.cantidad} pares)</span>
+                  <span className="font-semibold">S/ {v.total} ({v.cantidad} unidades)</span>
                 </div>
               ))}
             </div>
@@ -559,7 +559,7 @@ export default function VentasPage() {
             <div className="flex gap-2 mb-3">
               <input
                 type="text"
-                placeholder="Numero del par (ej: 1)"
+                placeholder="Codigo de la prenda (ej: 1)"
                 value={codigo}
                 onChange={(e) => setCodigo(e.target.value)}
                 className="border border-gray-300 rounded px-3 py-2 flex-1"

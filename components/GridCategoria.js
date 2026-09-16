@@ -1,18 +1,24 @@
 import { obtenerProductos } from "../lib/api";
 import ProductoCard from "./ProductoCard";
 import FiltroBar from "./FiltroBar";
+import Paginacion from "./Paginacion";
+
+const POR_PAGINA = 24;
 
 export default async function GridCategoria({ categoria, titulo, searchParams, video }) {
-  const params = { categoria, limit: 1000 };
+  const paginaActual = Math.max(1, parseInt(searchParams?.page) || 1);
+  const params = { categoria, limit: POR_PAGINA, page: paginaActual };
   if (searchParams?.tipo) params.tipo = searchParams.tipo;
   if (searchParams?.seccion) params.seccion = searchParams.seccion;
 
   let productos = [];
+  let totalPaginas = 1;
   let error = null;
 
   try {
     const data = await obtenerProductos(params);
     productos = data.productos;
+    totalPaginas = data.totalPaginas || 1;
   } catch (e) {
     error = e.message;
   }
@@ -51,6 +57,8 @@ export default async function GridCategoria({ categoria, titulo, searchParams, v
               <ProductoCard key={producto._id} producto={producto} />
             ))}
           </div>
+
+          <Paginacion paginaActual={paginaActual} totalPaginas={totalPaginas} />
         </div>
       </div>
     </div>

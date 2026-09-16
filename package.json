@@ -1,5 +1,5 @@
 {
-  "name": "zapatillas-marcelo-frontend",
+  "name": "diveme-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,11 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "next": "16.2.12",
+    "next": "^16.3.5",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "recharts": "^3.10.1",
-    "tesseract.js": "^7.0.0"
+    "recharts": "^3.10.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

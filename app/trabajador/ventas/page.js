@@ -351,7 +351,7 @@ export default function TrabajadorVentasPage() {
             <div className="flex gap-2 mb-3">
               <input
                 type="text"
-                placeholder="Numero del par (ej: 1)"
+                placeholder="Codigo de la prenda (ej: 1)"
                 value={codigo}
                 onChange={(e) => setCodigo(e.target.value)}
                 className="border border-gray-300 rounded px-3 py-2 flex-1"

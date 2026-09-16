@@ -1,7 +1,7 @@
 export default function BotonWhatsapp({ producto }) {
   const numero = process.env.NEXT_PUBLIC_WHATSAPP;
   const mensaje = encodeURIComponent(
-    `Hola! Me interesa la zapatilla "${producto.nombre}" (${producto.marca}) que vi en Zapatillas Marcelo. Esta disponible?`
+    `Hola! Me interesa "${producto.nombre}" que vi en Diveme. Esta disponible?`
   );
   const link = `https://wa.me/${numero}?text=${mensaje}`;
 

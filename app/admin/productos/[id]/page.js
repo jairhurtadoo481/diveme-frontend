@@ -14,6 +14,7 @@ import {
 } from "../../../../lib/api";
 import { obtenerToken } from "../../../../lib/auth";
 import { SECCIONES, TIPOS_POR_SECCION } from "../../../../lib/catalogoRopa";
+import SelectorColores from "../../../../components/SelectorColores";
 
 const aInputDatetime = (fecha) => {
   if (!fecha) return "";
@@ -246,7 +247,7 @@ export default function EditarProductoPage() {
             <div className="flex gap-3">
               <input
                 name="codigo"
-                placeholder="Codigo / numero del par"
+                placeholder="Codigo de la prenda"
                 value={form.codigo}
                 onChange={manejarCambio}
                 className="border border-gray-300 rounded px-3 py-2 flex-1 bg-white text-gray-900"
@@ -331,13 +332,13 @@ export default function EditarProductoPage() {
               </select>
             </div>
 
-            <input
-              name="colores"
-              placeholder="Colores (separados por coma)"
-              value={form.colores}
-              onChange={manejarCambio}
-              className="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900"
-            />
+            <div>
+              <p className="font-semibold mb-2 text-gray-900">Colores</p>
+              <SelectorColores
+                value={form.colores}
+                onChange={(colores) => setForm((prev) => ({ ...prev, colores }))}
+              />
+            </div>
 
             <div className="flex gap-6">
               <label className="flex items-center gap-2 text-sm text-gray-900">

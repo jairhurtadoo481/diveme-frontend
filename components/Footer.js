@@ -1,8 +1,15 @@
 import Link from "next/link";
 import { SECCIONES } from "../lib/catalogoRopa";
 
+const INSTAGRAM_URL = "https://www.instagram.com/divemeperu/";
+const FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61586438874735";
+
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const numeroWhatsapp = process.env.NEXT_PUBLIC_WHATSAPP;
+  const whatsappUrl = numeroWhatsapp
+    ? `https://wa.me/${numeroWhatsapp}?text=${encodeURIComponent("Hola! Tengo una consulta.")}`
+    : null;
 
   return (
     <footer className="bg-white border-t border-black/10 mt-20">
@@ -68,10 +75,38 @@ export default function Footer() {
           {/* Contacto */}
           <div>
             <h4 className="font-semibold text-[var(--diveme-texto)] mb-4 uppercase tracking-wide text-xs">Contacto</h4>
-            <ul className="space-y-3 text-sm text-gray-500">
+            <ul className="space-y-2">
+              {whatsappUrl && (
+                <li>
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-500 hover:text-[var(--diveme-texto)] text-sm transition"
+                  >
+                    WhatsApp
+                  </a>
+                </li>
+              )}
               <li>
-                <p className="font-semibold text-[var(--diveme-texto)]">Escribenos</p>
-                <p>WhatsApp / Instagram</p>
+                <a
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-500 hover:text-[var(--diveme-texto)] text-sm transition"
+                >
+                  Instagram
+                </a>
+              </li>
+              <li>
+                <a
+                  href={FACEBOOK_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-500 hover:text-[var(--diveme-texto)] text-sm transition"
+                >
+                  Facebook
+                </a>
               </li>
             </ul>
           </div>
@@ -84,15 +119,32 @@ export default function Footer() {
               {"©"} {currentYear} Diveme. Todos los derechos reservados.
             </p>
             <div className="flex gap-6">
-              <Link href="/" className="text-gray-500 hover:text-[var(--diveme-texto)] transition">
+              <a
+                href={FACEBOOK_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-500 hover:text-[var(--diveme-texto)] transition"
+              >
                 <span className="text-sm font-semibold">Facebook</span>
-              </Link>
-              <Link href="/" className="text-gray-500 hover:text-[var(--diveme-texto)] transition">
+              </a>
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-500 hover:text-[var(--diveme-texto)] transition"
+              >
                 <span className="text-sm font-semibold">Instagram</span>
-              </Link>
-              <Link href="/" className="text-gray-500 hover:text-[var(--diveme-texto)] transition">
-                <span className="text-sm font-semibold">WhatsApp</span>
-              </Link>
+              </a>
+              {whatsappUrl && (
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-500 hover:text-[var(--diveme-texto)] transition"
+                >
+                  <span className="text-sm font-semibold">WhatsApp</span>
+                </a>
+              )}
             </div>
           </div>
 
